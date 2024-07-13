@@ -17,7 +17,7 @@ class Hand:
         if finger < 0 or finger > 4: return False
         finger_tip = self.landmarks[_finger_tips[finger]]
         knuckle = self.landmarks[_knuckles[finger]]
-        return finger_tip['y'] < knuckle['y']
+        return finger_tip[1] < knuckle[1]
 
     def palm(self):
         return [self.landmarks[i] for i in _palm]
@@ -51,11 +51,13 @@ class HandDetector:
             hand_landmarks = hand_landmarks.landmark
             hand_type = hand_type.classification[0].label
             if flip:
-                hand_landmarks = [{'x' :1 - lm.x,'y': lm.y,'z' : lm.z} for lm in hand_landmarks]
+                hand_landmarks = [[1 - lm.x, lm.y, lm.z] for lm in hand_landmarks]
                 if hand_type == 'Right':
                     hand_type = 'Left'
                 else:
                     hand_type = 'Right'
+            else:
+                hand_landmarks = [[lm.x, lm.y, lm.z] for lm in hand_landmarks]
             hand = Hand(hand_type, hand_landmarks)
             array_of_hands.append(hand)
         return array_of_hands
