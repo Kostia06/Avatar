@@ -11,6 +11,8 @@ class Camera:
 
     def get_frame(self):
         ret, frame = self.cap.read()
+        if not ret or frame is None:
+            return None
         # cvt color to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         return frame
